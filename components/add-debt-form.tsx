@@ -7,13 +7,14 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
+import { Debt } from "@/types"
+
 interface AddDebtFormProps {
-  onSubmit: (debt: any) => void
+  onSubmit: (debt: Omit<Debt, "id" | "paidAmount" | "payments" | "createdAt">) => void
   onCancel: () => void
-  currency?: string
 }
 
-export function AddDebtForm({ onSubmit, onCancel, currency = "USD" }: AddDebtFormProps) {
+export function AddDebtForm({ onSubmit, onCancel }: AddDebtFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -23,9 +24,9 @@ export function AddDebtForm({ onSubmit, onCancel, currency = "USD" }: AddDebtFor
     monthlyPayment: "",
   })
 
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData({
       ...formData,
@@ -33,7 +34,7 @@ export function AddDebtForm({ onSubmit, onCancel, currency = "USD" }: AddDebtFor
     })
   }
 
-  const handleSelectChange = (name, value) => {
+  const handleSelectChange = (name: string, value: string) => {
     setFormData({
       ...formData,
       [name]: value,
@@ -41,7 +42,7 @@ export function AddDebtForm({ onSubmit, onCancel, currency = "USD" }: AddDebtFor
   }
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors: Record<string, string> = {}
 
     if (!formData.name.trim()) {
       newErrors.name = "Name is required"

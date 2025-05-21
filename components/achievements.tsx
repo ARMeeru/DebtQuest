@@ -4,14 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Lock, CheckCircle } from "lucide-react"
+import { Achievement } from "@/types"
 
 interface AchievementsProps {
-  achievements: any[]
+  achievements: Achievement[]
   paidOffPercentage: number
-  debts: any[]
 }
 
-export function Achievements({ achievements, paidOffPercentage, debts }: AchievementsProps) {
+export function Achievements({ achievements, paidOffPercentage }: AchievementsProps) {
   // Group achievements by category
   const achievementsByCategory = achievements.reduce((acc, achievement) => {
     if (!acc[achievement.category]) {

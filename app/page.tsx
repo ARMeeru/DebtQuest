@@ -1,30 +1,45 @@
-import type { Metadata } from "next"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Trophy, PiggyBank, TrendingUp, BarChart3 } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Trophy, PiggyBank, TrendingUp, BarChart3 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const metadata: Metadata = {
   title: "DebtQuest - Gamified Debt Reduction Tracker",
   description: "Track and gamify your journey to financial freedom",
-}
+};
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+      <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white dark:text-white">
         <div className="container mx-auto px-4 py-4 flex justify-end">
           <ThemeToggle />
         </div>
         <div className="container mx-auto px-4 py-8 flex flex-col items-center text-center">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">DebtQuest</h1>
-          <p className="mt-4 text-xl max-w-2xl">Turn your debt reduction journey into an adventure</p>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-white">
+            DebtQuest
+          </h1>
+          <p className="mt-4 text-xl max-w-2xl text-white">
+            Turn your debt reduction journey into an adventure
+          </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <Button asChild size="lg" className="bg-white text-emerald-600 hover:bg-gray-100">
+            <Button
+              asChild
+              size="lg"
+              className="bg-white text-emerald-600 hover:bg-gray-100"
+            >
               <Link href="/dashboard">Get Started</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-              <Link href="#features">Learn More</Link>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-white bg-transparent hover:bg-white/10"
+            >
+              <Link href="#features" className="text-white">
+                Learn More
+              </Link>
             </Button>
           </div>
         </div>
@@ -33,7 +48,9 @@ export default function Home() {
       <main className="flex-1">
         <section id="features" className="py-16 px-4">
           <div className="container mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">Turn Debt Reduction into a Game</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">
+              Turn Debt Reduction into a Game
+            </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <FeatureCard
                 icon={<PiggyBank className="h-10 w-10 text-emerald-500" />}
@@ -63,10 +80,12 @@ export default function Home() {
           <div className="container mx-auto">
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="md:w-1/2">
-                <h2 className="text-3xl font-bold mb-4">Privacy-First Design</h2>
+                <h2 className="text-3xl font-bold mb-4">
+                  Privacy-First Design
+                </h2>
                 <p className="text-lg mb-6">
-                  Your financial data stays on your device with local storage. No servers, no sharing, just your
-                  personal finance journey.
+                  Your financial data stays on your device with local storage.
+                  No servers, no sharing, just your personal finance journey.
                 </p>
                 <ul className="space-y-2">
                   {[
@@ -90,7 +109,9 @@ export default function Home() {
                     <div className="inline-block p-3 bg-emerald-100 rounded-full mb-3 dark:bg-emerald-900">
                       <PiggyBank className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
                     </div>
-                    <h3 className="text-lg font-medium">Your Data Stays With You</h3>
+                    <h3 className="text-lg font-medium">
+                      Your Data Stays With You
+                    </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                       Secure, private, and always under your control
                     </p>
@@ -103,11 +124,18 @@ export default function Home() {
 
         <section className="py-16 px-4">
           <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6">Ready to Conquer Your Debt?</h2>
+            <h2 className="text-3xl font-bold mb-6">
+              Ready to Conquer Your Debt?
+            </h2>
             <p className="text-lg max-w-2xl mx-auto mb-8">
-              Start your debt-free journey today with DebtQuest's gamified approach to financial freedom.
+              Start your debt-free journey today with DebtQuest&apos;s gamified
+              approach to financial freedom.
             </p>
-            <Button asChild size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+            <Button
+              asChild
+              size="lg"
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
               <Link href="/dashboard">Launch DebtQuest</Link>
             </Button>
           </div>
@@ -119,7 +147,9 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
               <h2 className="text-2xl font-bold">DebtQuest</h2>
-              <p className="text-gray-400 mt-2">Gamified debt reduction tracker</p>
+              <p className="text-gray-400 mt-2">
+                Gamified debt reduction tracker
+              </p>
             </div>
             <div className="flex gap-8">
               <div>
@@ -148,7 +178,7 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
 function FeatureCard({ icon, title, description }) {
@@ -158,5 +188,5 @@ function FeatureCard({ icon, title, description }) {
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-gray-600 dark:text-gray-300">{description}</p>
     </div>
-  )
+  );
 }

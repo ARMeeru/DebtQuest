@@ -20,18 +20,18 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { formatCurrency } from "@/lib/utils"
 import { PaymentForm } from "@/components/payment-form"
+import { Debt } from "@/types"
 
 interface DebtListProps {
-  debts: any[]
+  debts: Debt[]
   onAddDebt: () => void
-  onUpdateDebt: (debt: any) => void
+  onUpdateDebt: (debt: Debt) => void
   onDeleteDebt: (debtId: string) => void
   currency?: string
 }
 
 export function DebtList({ debts, onAddDebt, onUpdateDebt, onDeleteDebt, currency = "USD" }: DebtListProps) {
   const [showPaymentForm, setShowPaymentForm] = useState<string | null>(null)
-  const [editingDebt, setEditingDebt] = useState<string | null>(null)
 
   const getDebtIcon = (type) => {
     switch (type) {
@@ -108,7 +108,7 @@ export function DebtList({ debts, onAddDebt, onUpdateDebt, onDeleteDebt, currenc
                                   <DollarSign className="h-4 w-4 mr-2" />
                                   Make Payment
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => setEditingDebt(debt.id)}>
+                                <DropdownMenuItem>
                                   <Pencil className="h-4 w-4 mr-2" />
                                   Edit Debt
                                 </DropdownMenuItem>

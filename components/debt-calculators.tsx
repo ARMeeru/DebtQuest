@@ -219,7 +219,7 @@ export function DebtCalculators({ currency = "USD" }) {
               <div className="bg-blue-50 p-4 rounded-md">
                 <h3 className="font-medium mb-2">Debt Snowball Method</h3>
                 <p className="text-sm text-gray-600">
-                  Pay minimum payments on all debts, then put extra money toward the smallest balance first. When that's
+                  Pay minimum payments on all debts, then put extra money toward the smallest balance first. When that&apos;s
                   paid off, roll that payment into the next smallest debt.
                 </p>
               </div>

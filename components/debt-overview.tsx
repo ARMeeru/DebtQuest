@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { TrendingDown, Calendar, Award, Trophy } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import { DebtSnowball } from "@/components/debt-snowball"
+import { AppData } from "@/types"
 
 interface DebtOverviewProps {
-  data: any
+  data: AppData
   totalDebt: number
   paidOffAmount: number
   paidOffPercentage: number

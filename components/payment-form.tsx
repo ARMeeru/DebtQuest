@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { formatCurrency } from "@/lib/utils"
+import { Debt, Payment } from "@/types"
 
 interface PaymentFormProps {
-  debt: any
-  onSubmit: (payment: any) => void
+  debt: Debt
+  onSubmit: (payment: Omit<Payment, "id" | "date">) => void
   onCancel: () => void
 }
 
@@ -21,7 +22,7 @@ export function PaymentForm({ debt, onSubmit, onCancel }: PaymentFormProps) {
 
   const [errors, setErrors] = useState({})
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData({
       ...formData,

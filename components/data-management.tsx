@@ -5,9 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Download, Upload, AlertTriangle } from "lucide-react"
 
+import { AppData } from "@/types"
+
 interface DataManagementProps {
-  data: any
-  onDataImport: (data: any) => void
+  data: AppData
+  onDataImport: (data: AppData) => void
 }
 
 export function DataManagement({ data, onDataImport }: DataManagementProps) {

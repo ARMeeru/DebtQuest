@@ -3,8 +3,10 @@
 import { useEffect, useRef } from "react"
 import { formatCurrency } from "@/lib/utils"
 
+import { Debt } from "@/types"
+
 interface DebtSnowballProps {
-  debts: any[]
+  debts: Debt[]
 }
 
 export function DebtSnowball({ debts }: DebtSnowballProps) {

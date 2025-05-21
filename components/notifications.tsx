@@ -54,9 +54,6 @@ export function NotificationCenter({ debts }) {
       }
     })
 
-    // Check for achievements that are close to being unlocked
-    const achievementThreshold = 0.9 // 90% progress toward achievement
-
     // Add notifications for debts that are close to being paid off
     debts.forEach((debt) => {
       const payoffPercentage = debt.paidAmount / debt.initialAmount
@@ -80,13 +77,13 @@ export function NotificationCenter({ debts }) {
     if (uniqueNewNotifications.length > 0) {
       setNotifications([...uniqueNewNotifications, ...notifications].slice(0, 50)) // Keep only the 50 most recent
     }
-  }, [debts, notificationsEnabled])
+  }, [debts, notificationsEnabled, notifications, setNotifications])
 
   // Count unread notifications
   useEffect(() => {
     const count = notifications.filter((n) => !n.read).length
     setUnreadCount(count)
-  }, [notifications])
+  }, [notifications, setUnreadCount])
 
   const markAsRead = (id) => {
     setNotifications(notifications.map((n) => (n.id === id ? { ...n, read: true } : n)))

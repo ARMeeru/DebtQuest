@@ -28,6 +28,7 @@ import { DataManagement } from "@/components/data-management"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { initialData } from "@/lib/initial-data"
 import { NotificationCenter } from "@/components/notifications"
+import Link from "next/link"
 import { PrintReports } from "@/components/print-reports"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -128,7 +129,7 @@ export default function Dashboard() {
         achievements: [...data.achievements, ...missingAchievements],
       })
     }
-  }, []) // Empty dependency array to run only once
+  }, [data, setData]) // Include data and setData as dependencies
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -140,7 +141,7 @@ export default function Dashboard() {
       >
         <div className={`flex items-center gap-2 p-4 ${sidebarCollapsed ? "justify-center" : "mb-4"}`}>
           <PiggyBank className="h-6 w-6 text-emerald-600 flex-shrink-0" />
-          {!sidebarCollapsed && <h1 className="text-xl font-bold">DebtQuest</h1>}
+          {!sidebarCollapsed && <h1 className="text-xl font-bold"><Link href="/">DebtQuest</Link></h1>}
         </div>
 
         <nav className="space-y-1 flex-1 px-2">
