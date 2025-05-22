@@ -6,9 +6,9 @@
 
 DebtQuest transforms your debt reduction journey into an engaging adventure. By gamifying the process of becoming debt-free, DebtQuest motivates you to stay committed to your financial goals through achievements, visualizations, and strategic planning tools.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/asifur-rahamans-projects/v0-gamified-debt-tracker)
-[![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js%2015-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Styled with Tailwind](https://img.shields.io/badge/Styled%20with-Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Built with React](https://img.shields.io/badge/Built%20with-React%2019-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 
 ## Features
 
@@ -19,13 +19,15 @@ DebtQuest transforms your debt reduction journey into an engaging adventure. By 
 
 ### 🏆 Gamification Elements
 - Earn badges and achievements as you reach milestones
+- Enhanced achievement system with customizable rewards
 - Unlock rewards for consistent debt payments
 - Challenge yourself with financial goals
 
 ### 📈 Powerful Visualizations
-- Interactive charts and progress indicators
+- Interactive charts and progress indicators using Recharts
 - Debt snowball/avalanche visualizer
 - Payment history tracking
+- Printable financial reports
 
 ### 🧮 Strategic Planning
 - Debt snowball/avalanche calculators
@@ -40,14 +42,13 @@ DebtQuest transforms your debt reduction journey into an engaging adventure. By 
 
 ## Getting Started
 
-### Live Demo
-Visit the deployed application at: [DebtQuest](https://vercel.com/asifur-rahamans-projects/v0-gamified-debt-tracker)
+
 
 ### Local Development
 
 1. Clone the repository:
 ```
-git clone https://github.com/your-username/debtquest.git
+git clone https://github.com/yourusername/debtquest.git
 cd debtquest
 ```
 
@@ -86,11 +87,18 @@ DebtQuest/
 
 ## Technologies Used
 
-- **Framework**: Next.js with React
-- **Styling**: Tailwind CSS with shadcn/ui components
+- **Framework**: Next.js 15 with React 19
+- **Styling**: Tailwind CSS with shadcn/ui components (Radix UI)
 - **State Management**: React Hooks + Local Storage
-- **Data Visualization**: Recharts
-- **Form Management**: React Hook Form + Zod validation
+- **Data Visualization**: Recharts 2.15
+- **Form Management**: React Hook Form 7.54 + Zod 3.24 validation
+- **Date Handling**: date-fns 4.1
+- **Notifications**: Sonner 1.7
+- **UI Components**:
+  - Radix UI primitives
+  - Vaul for drawers
+  - Embla Carousel
+  - React Day Picker
 
 ## Contributing
 
@@ -108,13 +116,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Special thanks to the v0.dev team for providing design inspiration
-- All the contributors who have helped improve DebtQuest
+- Special thanks to the v0.dev team for providing initial commit
+- All the contributors who have helped/will help improve DebtQuest
 - You, for taking control of your financial future!
 
 ## Contact
 
-For questions, suggestions, or feedback, please [open an issue](https://github.com/your-username/debtquest/issues) on GitHub.
+For questions, suggestions, or feedback, please [open an issue](https://github.com/ARMeeru/DebtQuest/issues/) on GitHub.
 
 ---
 
