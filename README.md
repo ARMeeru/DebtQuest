@@ -1,6 +1,6 @@
 # DebtQuest - Gamified Debt Reduction Tracker
 
-![DebtQuest Logo](public/images/logo.png)
+![DebtQuest Logo](public/favicon.svg)
 
 ## Overview
 
