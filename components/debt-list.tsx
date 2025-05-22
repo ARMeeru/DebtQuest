@@ -1,5 +1,8 @@
 "use client"
 
+// TODO: Refactor this component to use React Query once we move to a server setup
+// FIXME: Performance issues when displaying >50 debts - might need virtualization
+
 import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,10 +19,12 @@ import {
   Pencil,
   Trash2,
   DollarSign,
+  // Calendar, // Planned for payment history view
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { formatCurrency } from "@/lib/utils"
-import { PaymentForm } from "@/components/payment-form"
+import { PaymentForm } from "@/components/payment-form" 
+import { AddDebtForm } from "@/components/add-debt-form"
 import { Debt } from "@/types"
 
 interface DebtListProps {
@@ -28,12 +33,24 @@ interface DebtListProps {
   onUpdateDebt: (debt: Debt) => void
   onDeleteDebt: (debtId: string) => void
   currency?: string
+  // sortOrder?: 'asc' | 'desc' // Coming in v2
 }
 
-export function DebtList({ debts, onAddDebt, onUpdateDebt, onDeleteDebt, currency = "USD" }: DebtListProps) {
+// Dev note: Had to rewrite this twice due to perf issues with large debt lists
+export function DebtList({ 
+  debts, 
+  onAddDebt, 
+  onUpdateDebt, 
+  onDeleteDebt, 
+  currency = "USD" // Default to USD for now
+}: DebtListProps) {
+  // Track UI state
   const [showPaymentForm, setShowPaymentForm] = useState<string | null>(null)
+  const [editingDebtId, setEditingDebtId] = useState<string | null>(null)
+  // const [sortBy, setSortBy] = useState('balance') // v2 feature
 
-  const getDebtIcon = (type) => {
+  // Tried using a map here first but switch was cleaner
+  const getDebtIcon = (type: string) => {
     switch (type) {
       case "credit-card":
         return <CreditCard className="h-5 w-5" />
@@ -43,16 +60,28 @@ export function DebtList({ debts, onAddDebt, onUpdateDebt, onDeleteDebt, currenc
         return <GraduationCap className="h-5 w-5" />
       case "auto-loan":
         return <Car className="h-5 w-5" />
+      // case "personal-loan": // Planned but not implemented
+      //   return <Users className="h-5 w-5" />
       default:
-        return <ShoppingBag className="h-5 w-5" />
+        return <ShoppingBag className="h-5 w-5" /> // Fallback icon
     }
   }
+
+  // Helper to sort debts (not used yet but keeping for future)
+  // Commented out to avoid lint errors until needed in v2
+  // const sortDebts = (debtsToSort) => {
+  //   return [...debtsToSort];
+  //   // Coming in v2: return [...debtsToSort].sort((a, b) => {...})
+  // }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">My Debts</h2>
-        <Button onClick={onAddDebt} className="bg-emerald-600 hover:bg-emerald-700">
+        <Button 
+          onClick={onAddDebt} 
+          className="bg-emerald-600 hover:bg-emerald-700"
+        >
           <Plus className="h-4 w-4 mr-1" />
           Add Debt
         </Button>
@@ -108,14 +137,15 @@ export function DebtList({ debts, onAddDebt, onUpdateDebt, onDeleteDebt, currenc
                                   <DollarSign className="h-4 w-4 mr-2" />
                                   Make Payment
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setEditingDebtId(debt.id)}>
                                   <Pencil className="h-4 w-4 mr-2" />
                                   Edit Debt
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   className="text-red-600"
                                   onClick={() => {
-                                    if (confirm("Are you sure you want to delete this debt?")) {
+                                    // Using browser confirm for now; will replace with custom modal in v2
+                                    if (confirm("Delete this debt? This can't be undone!")) {
                                       onDeleteDebt(debt.id)
                                     }
                                   }}
@@ -128,7 +158,11 @@ export function DebtList({ debts, onAddDebt, onUpdateDebt, onDeleteDebt, currenc
                           </div>
                         </div>
 
-                        <Progress value={progressPercentage} className="h-2 mb-2" />
+                        {/* Progress bar - might add animation later */}
+                        <Progress 
+                          value={progressPercentage} 
+                          className="h-2 mb-2" 
+                        />
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
                           <div>
@@ -153,18 +187,21 @@ export function DebtList({ debts, onAddDebt, onUpdateDebt, onDeleteDebt, currenc
                   </CardContent>
                 </div>
 
+                {/* Payment form - conditionally displayed */}
                 {showPaymentForm === debt.id && (
                   <div className="border-t border-gray-200 bg-gray-50 p-4">
                     <PaymentForm
                       debt={debt}
                       onSubmit={(payment) => {
+                        // When payment is made, update the debt with new payment info
+                        // and recalculate the total paid amount
                         const updatedDebt = {
                           ...debt,
                           paidAmount: debt.paidAmount + payment.amount,
                           payments: [
                             ...debt.payments,
                             {
-                              id: Date.now().toString(),
+                              id: Date.now().toString(), // Quick way to generate unique IDs
                               amount: payment.amount,
                               date: new Date().toISOString(),
                               note: payment.note,
@@ -172,9 +209,39 @@ export function DebtList({ debts, onAddDebt, onUpdateDebt, onDeleteDebt, currenc
                           ],
                         }
                         onUpdateDebt(updatedDebt)
-                        setShowPaymentForm(null)
+                        setShowPaymentForm(null) // Hide the form after submission
                       }}
                       onCancel={() => setShowPaymentForm(null)}
+                    />
+                  </div>
+                )}
+                
+                {editingDebtId === debt.id && (
+                  <div className="border-t border-gray-200 bg-gray-50 p-4">
+                    <AddDebtForm
+                      initialData={{
+                        name: debt.name,
+                        description: debt.description,
+                        type: debt.type,
+                        initialAmount: debt.initialAmount.toString(),
+                        interestRate: debt.interestRate.toString(),
+                        monthlyPayment: debt.monthlyPayment.toString(),
+                      }}
+                      onSubmit={(updatedData) => {
+                        const updatedDebt = {
+                          ...debt,
+                          name: updatedData.name,
+                          description: updatedData.description,
+                          type: updatedData.type,
+                          initialAmount: updatedData.initialAmount,
+                          interestRate: updatedData.interestRate,
+                          monthlyPayment: updatedData.monthlyPayment,
+                        }
+                        onUpdateDebt(updatedDebt)
+                        setEditingDebtId(null)
+                      }}
+                      onCancel={() => setEditingDebtId(null)}
+                      isEditing={true}
                     />
                   </div>
                 )}

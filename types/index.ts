@@ -1,7 +1,7 @@
 export interface Debt {
   id: string;
   name: string;
-  description?: string;
+  description: string; // Making this required for consistency
   type: string;
   initialAmount: number;
   paidAmount: number;
@@ -27,9 +27,9 @@ export interface Achievement {
   points: number;
   unlocked: boolean;
   unlockedAt: string | null;
-  progressBased?: boolean;
-  currentProgress?: number;
-  targetProgress?: number;
+  progressBased: boolean;
+  currentProgress: number;
+  targetProgress: number;
 }
 
 export interface AppData {
@@ -40,6 +40,39 @@ export interface AppData {
     currency?: string;
     [key: string]: any;
   };
+}
+
+// Type for category-grouped achievements
+export type CategoryAchievements = Record<string, Achievement[]>;
+
+// Type for calculation results
+export interface CalculationResult {
+  months: number;
+  interest: number;
+  payoffDate: Date;
+}
+
+export interface CalculationResults {
+  standard: CalculationResult;
+  withExtra: CalculationResult;
+  monthsSaved: number;
+  interestSaved: number;
+}
+
+// For debt calculator
+export interface DebtCalculatorItem {
+  id: string;
+  name: string;
+  balance: string;
+  rate: string;
+  payment: string;
+  paymentSchedule?: Array<{
+    month: number;
+    payment: number;
+    principal: number;
+    interest: number;
+    remainingBalance: number;
+  }>;
 }
 
 export interface Notification {

@@ -20,7 +20,7 @@ export function PaymentForm({ debt, onSubmit, onCancel }: PaymentFormProps) {
     note: `Regular payment for ${debt.name}`,
   })
 
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -31,7 +31,7 @@ export function PaymentForm({ debt, onSubmit, onCancel }: PaymentFormProps) {
   }
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors: Record<string, string> = {}
 
     if (!formData.amount || isNaN(Number(formData.amount)) || Number(formData.amount) <= 0) {
       newErrors.amount = "Please enter a valid amount"
@@ -45,13 +45,13 @@ export function PaymentForm({ debt, onSubmit, onCancel }: PaymentFormProps) {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (validateForm()) {
       onSubmit({
         ...formData,
-        amount: Number.parseFloat(formData.amount),
+        amount: Number.parseFloat(formData.amount.toString()),
       })
     }
   }

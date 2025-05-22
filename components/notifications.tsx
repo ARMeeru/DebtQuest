@@ -9,10 +9,21 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { formatDate, timeUntil } from "@/lib/utils"
 import { useLocalStorage } from "@/hooks/use-local-storage"
+import { Debt } from "@/types"
 
-export function NotificationCenter({ debts }) {
-  const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage("notifications-enabled", true)
-  const [notifications, setNotifications] = useLocalStorage("debt-quest-notifications", [])
+interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  date: string;
+  read: boolean;
+  debtId: string;
+}
+
+export function NotificationCenter({ debts }: { debts: Debt[] }) {
+  const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage<boolean>("notifications-enabled", true)
+  const [notifications, setNotifications] = useLocalStorage<Notification[]>("debt-quest-notifications", [])
   const [showNotifications, setShowNotifications] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
 
@@ -21,10 +32,10 @@ export function NotificationCenter({ debts }) {
     if (!notificationsEnabled || !debts || debts.length === 0) return
 
     const today = new Date()
-    const newNotifications = []
+    const newNotifications: Notification[] = []
 
     // Check for upcoming payments
-    debts.forEach((debt) => {
+    debts.forEach((debt: Debt) => {
       // Calculate next payment date based on the last payment
       let nextPaymentDate = new Date()
       if (debt.payments && debt.payments.length > 0) {
@@ -55,7 +66,7 @@ export function NotificationCenter({ debts }) {
     })
 
     // Add notifications for debts that are close to being paid off
-    debts.forEach((debt) => {
+    debts.forEach((debt: Debt) => {
       const payoffPercentage = debt.paidAmount / debt.initialAmount
       if (payoffPercentage >= 0.9 && payoffPercentage < 1) {
         newNotifications.push({
@@ -85,7 +96,7 @@ export function NotificationCenter({ debts }) {
     setUnreadCount(count)
   }, [notifications, setUnreadCount])
 
-  const markAsRead = (id) => {
+  const markAsRead = (id: string) => {
     setNotifications(notifications.map((n) => (n.id === id ? { ...n, read: true } : n)))
   }
 
@@ -93,7 +104,7 @@ export function NotificationCenter({ debts }) {
     setNotifications(notifications.map((n) => ({ ...n, read: true })))
   }
 
-  const deleteNotification = (id) => {
+  const deleteNotification = (id: string) => {
     setNotifications(notifications.filter((n) => n.id !== id))
   }
 

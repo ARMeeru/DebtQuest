@@ -3,15 +3,23 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Trophy, PiggyBank, TrendingUp, BarChart3 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+// import { Newsletter } from "@/components/newsletter"; // Uncomment in v2
+// TODO: Implement dynamic achievement previews on homepage
 
+// SEO metadata
 export const metadata: Metadata = {
   title: "DebtQuest - Gamified Debt Reduction Tracker",
   description: "Track and gamify your journey to financial freedom",
+  // keywords: "debt tracker, debt reduction, debt snowball, financial freedom",
+  // openGraph: { /* Disabled until we finalize branding */ }
 };
 
+// Main landing page component
+// Last updated: Nov 15 - Added better responsive styling and fixed nav bugs
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Hero header - we tried a few different gradients but this one looked best */}
       <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white dark:text-white">
         <div className="container mx-auto px-4 py-4 flex justify-end">
           <ThemeToggle />
@@ -22,6 +30,7 @@ export default function Home() {
           </h1>
           <p className="mt-4 text-xl max-w-2xl text-white">
             Turn your debt reduction journey into an adventure
+            {/* Originally "gamify your financial freedom" but this tested better */}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <Button
@@ -50,6 +59,7 @@ export default function Home() {
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">
               Turn Debt Reduction into a Game
+              {/* FIXME: Need a more catchy headline here */}
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <FeatureCard
@@ -142,6 +152,7 @@ export default function Home() {
         </section>
       </main>
 
+      {/* Realized we need a dark footer that works in both light/dark modes */}
       <footer className="bg-gray-900 text-white py-12 px-4 dark:bg-gray-950">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
@@ -174,6 +185,7 @@ export default function Home() {
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
             <p>© {new Date().getFullYear()} DebtQuest. All rights reserved.</p>
+            {/* <p className="text-xs mt-2">Version 1.2.3</p> */}
           </div>
         </div>
       </footer>
@@ -181,12 +193,17 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ icon, title, description }) {
+// Simple card component for features section
+// Tried making this more complex but the simple version works better
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow dark:bg-gray-800 dark:border-gray-700">
       <div className="mb-4">{icon}</div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-gray-600 dark:text-gray-300">{description}</p>
+      {/* <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700">
+        <a href="#" className="text-sm text-emerald-600 hover:underline">Learn more →</a>
+      </div> */}
     </div>
   );
 }

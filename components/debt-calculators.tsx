@@ -10,18 +10,55 @@ import { Calculator, TrendingDown, TrendingUp, Calendar, DollarSign } from "luci
 import { formatCurrency } from "@/lib/utils"
 
 // Update the DebtCalculators component to accept currency prop
-export function DebtCalculators({ currency = "USD" }) {
+export function DebtCalculators({ currency = "USD" }: { currency?: string }) {
   const [activeTab, setActiveTab] = useState("snowball")
-  const [debts, setDebts] = useState([
+  const [debts, setDebts] = useState<Array<{
+    id: string;
+    name: string;
+    balance: number;
+    rate: number;
+    payment: number;
+    monthsToPayoff?: number;
+    totalInterest?: number;
+    payoffDate?: Date;
+    paymentSchedule?: Array<{
+      month: number;
+      payment: number;
+      principal: number;
+      interest: number;
+      remainingBalance: number;
+    }>;
+  }>>([
     { id: "1", name: "Credit Card", balance: 5000, rate: 18.99, payment: 150 },
     { id: "2", name: "Car Loan", balance: 12000, rate: 4.5, payment: 300 },
     { id: "3", name: "Student Loan", balance: 25000, rate: 5.8, payment: 400 },
   ])
-  const [extraPayment, setExtraPayment] = useState(200)
-  const [results, setResults] = useState(null)
+  const [extraPayment, setExtraPayment] = useState<number>(200)
+  const [results, setResults] = useState<{
+    standard: {
+      months: number;
+      interest: number;
+      payoffDate: Date;
+    };
+    withExtra: {
+      months: number;
+      interest: number;
+      payoffDate: Date;
+      monthlyResults: Array<{
+        month: number;
+        debts: Array<{
+          name: string;
+          balance: number;
+        }>;
+      }>;
+    };
+    monthsSaved: number;
+    interestSaved: number;
+  } | null>(null)
 
-  const handleDebtChange = (id, field, value) => {
-    setDebts(debts.map((debt) => (debt.id === id ? { ...debt, [field]: value } : debt)))
+  const handleDebtChange = (id: string, field: string, value: string | number): void => {
+    const parsedValue = typeof value === 'string' && field !== 'name' ? parseFloat(value) || 0 : value;
+    setDebts(debts.map((debt) => (debt.id === id ? { ...debt, [field]: parsedValue } : debt)));
   }
 
   const addDebt = () => {
@@ -37,7 +74,7 @@ export function DebtCalculators({ currency = "USD" }) {
     ])
   }
 
-  const removeDebt = (id) => {
+  const removeDebt = (id: string): void => {
     setDebts(debts.filter((debt) => debt.id !== id))
   }
 
@@ -45,13 +82,19 @@ export function DebtCalculators({ currency = "USD" }) {
     // Clone debts for calculation
     const debtsCopy = debts.map((debt) => ({
       ...debt,
-      balance: Number.parseFloat(debt.balance),
-      rate: Number.parseFloat(debt.rate),
-      payment: Number.parseFloat(debt.payment),
+      balance: debt.balance,
+      rate: debt.rate,
+      payment: debt.payment,
       monthsToPayoff: 0,
       totalInterest: 0,
       payoffDate: new Date(),
-      paymentSchedule: [],
+      paymentSchedule: [] as Array<{
+        month: number;
+        payment: number;
+        principal: number;
+        interest: number;
+        remainingBalance: number;
+      }>,
     }))
 
     // Sort by balance (snowball) or interest rate (avalanche)
@@ -66,7 +109,7 @@ export function DebtCalculators({ currency = "USD" }) {
     const currentDate = new Date()
     let totalMonths = 0
     let totalInterestPaid = 0
-    const monthlyExtra = Number.parseFloat(extraPayment)
+    const monthlyExtra = extraPayment
 
     // Calculate minimum payment months and interest
     sortedDebts.forEach((debt) => {
@@ -89,6 +132,9 @@ export function DebtCalculators({ currency = "USD" }) {
         balance -= principalAmount
         monthCount++
 
+        if (!debt.paymentSchedule) {
+          debt.paymentSchedule = [];
+        }
         debt.paymentSchedule.push({
           month: monthCount,
           payment: debt.payment,
@@ -252,7 +298,7 @@ export function DebtCalculators({ currency = "USD" }) {
                         <Input
                           type="number"
                           placeholder="Balance"
-                          value={debt.balance}
+                          value={debt.balance.toString()}
                           onChange={(e) => handleDebtChange(debt.id, "balance", e.target.value)}
                         />
                       </div>
@@ -260,7 +306,7 @@ export function DebtCalculators({ currency = "USD" }) {
                         <Input
                           type="number"
                           placeholder="Rate %"
-                          value={debt.rate}
+                          value={debt.rate.toString()}
                           onChange={(e) => handleDebtChange(debt.id, "rate", e.target.value)}
                         />
                       </div>
@@ -268,7 +314,7 @@ export function DebtCalculators({ currency = "USD" }) {
                         <Input
                           type="number"
                           placeholder="Min Payment"
-                          value={debt.payment}
+                          value={debt.payment.toString()}
                           onChange={(e) => handleDebtChange(debt.id, "payment", e.target.value)}
                         />
                       </div>
@@ -294,12 +340,12 @@ export function DebtCalculators({ currency = "USD" }) {
               <div>
                 <Label htmlFor="extra-payment">Extra Monthly Payment</Label>
                 <div className="flex items-center gap-2 mt-2">
-                  <Input
-                    id="extra-payment"
-                    type="number"
-                    value={extraPayment}
-                    onChange={(e) => setExtraPayment(e.target.value)}
-                  />
+                    <Input
+                      id="extra-payment"
+                      type="number"
+                      value={extraPayment.toString()}
+                      onChange={(e) => setExtraPayment(parseFloat(e.target.value) || 0)}
+                    />
                   <Button onClick={calculatePayoff} className="bg-emerald-600 hover:bg-emerald-700">
                     Calculate
                   </Button>

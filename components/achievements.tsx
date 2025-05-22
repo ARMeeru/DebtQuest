@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Lock, CheckCircle } from "lucide-react"
-import { Achievement } from "@/types"
+import { Achievement, CategoryAchievements } from "@/types"
 
 interface AchievementsProps {
   achievements: Achievement[]
@@ -13,13 +13,13 @@ interface AchievementsProps {
 
 export function Achievements({ achievements, paidOffPercentage }: AchievementsProps) {
   // Group achievements by category
-  const achievementsByCategory = achievements.reduce((acc, achievement) => {
+  const achievementsByCategory = achievements.reduce<CategoryAchievements>((acc, achievement) => {
     if (!acc[achievement.category]) {
       acc[achievement.category] = []
     }
     acc[achievement.category].push(achievement)
     return acc
-  }, {})
+  }, {} as CategoryAchievements)
 
   return (
     <div className="space-y-6">
@@ -80,12 +80,12 @@ export function Achievements({ achievements, paidOffPercentage }: AchievementsPr
         </CardContent>
       </Card>
 
-      {Object.entries(achievementsByCategory).map(([category, categoryAchievements]) => (
+      {Object.entries(achievementsByCategory).map(([category, categoryAchievements]: [string, Achievement[]]) => (
         <div key={category} className="space-y-4">
           <h3 className="text-lg font-semibold capitalize">{category} Achievements</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {categoryAchievements.map((achievement) => (
+            {categoryAchievements.map((achievement: Achievement) => (
               <Card
                 key={achievement.id}
                 className={`border ${achievement.unlocked ? "border-amber-200 bg-amber-50/30" : "border-gray-200"}`}

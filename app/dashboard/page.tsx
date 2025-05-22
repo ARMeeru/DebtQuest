@@ -33,13 +33,14 @@ import { PrintReports } from "@/components/print-reports"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getAvailableCurrencies } from "@/lib/utils"
+import { AppData, Achievement, Debt } from "@/types"
 
 export default function Dashboard() {
-  const [data, setData] = useLocalStorage("debt-quest-data", initialData)
+  const [data, setData] = useLocalStorage<AppData>("debt-quest-data", initialData as AppData)
   const [showAddDebt, setShowAddDebt] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [currency, setCurrency] = useLocalStorage("debt-quest-currency", "USD")
+  const [currency, setCurrency] = useLocalStorage<string>("debt-quest-currency", "USD")
 
   // Calculate total debt and paid off amounts
   const totalDebt = data.debts.reduce((sum, debt) => sum + debt.initialAmount, 0)
@@ -57,7 +58,7 @@ export default function Dashboard() {
 
   // Memoize the update achievements callback to prevent it from changing on every render
   const handleUpdateAchievements = useCallback(
-    (updatedAchievements) => {
+    (updatedAchievements: Achievement[]) => {
       setData((prevData) => ({
         ...prevData,
         achievements: updatedAchievements,
@@ -68,7 +69,7 @@ export default function Dashboard() {
 
   // Add new achievements if they don't exist
   useEffect(() => {
-    const newAchievements = [
+    const newAchievements: Achievement[] = [
       {
         id: "11",
         name: "Debt Destroyer",
@@ -77,6 +78,9 @@ export default function Dashboard() {
         points: 75,
         unlocked: false,
         unlockedAt: null,
+        progressBased: false,
+        currentProgress: 0,
+        targetProgress: 0
       },
       {
         id: "12",
@@ -98,6 +102,9 @@ export default function Dashboard() {
         points: 40,
         unlocked: false,
         unlockedAt: null,
+        progressBased: false,
+        currentProgress: 0,
+        targetProgress: 0
       },
       {
         id: "14",
@@ -107,6 +114,9 @@ export default function Dashboard() {
         points: 20,
         unlocked: false,
         unlockedAt: null,
+        progressBased: false,
+        currentProgress: 0,
+        targetProgress: 0
       },
       {
         id: "15",
@@ -116,6 +126,9 @@ export default function Dashboard() {
         points: 15,
         unlocked: false,
         unlockedAt: null,
+        progressBased: false,
+        currentProgress: 0,
+        targetProgress: 0
       },
     ]
 
@@ -258,13 +271,13 @@ export default function Dashboard() {
               <DebtList
                 debts={data.debts}
                 onAddDebt={() => setShowAddDebt(true)}
-                onUpdateDebt={(updatedDebt) => {
+                onUpdateDebt={(updatedDebt: Debt) => {
                   setData({
                     ...data,
                     debts: data.debts.map((debt) => (debt.id === updatedDebt.id ? updatedDebt : debt)),
                   })
                 }}
-                onDeleteDebt={(debtId) => {
+                onDeleteDebt={(debtId: string) => {
                   setData({
                     ...data,
                     debts: data.debts.filter((debt) => debt.id !== debtId),
@@ -443,7 +456,6 @@ export default function Dashboard() {
                 setShowAddDebt(false)
               }}
               onCancel={() => setShowAddDebt(false)}
-              currency={currency}
             />
           </div>
         </div>
@@ -452,7 +464,13 @@ export default function Dashboard() {
   )
 }
 
-function NavItem({ icon, label, active, onClick, collapsed }) {
+function NavItem({ icon, label, active, onClick, collapsed }: { 
+  icon: React.ReactNode; 
+  label: string; 
+  active: boolean; 
+  onClick: () => void; 
+  collapsed: boolean 
+}) {
   return (
     <button
       className={`flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm ${

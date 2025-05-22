@@ -9,7 +9,14 @@ import { Label } from "@/components/ui/label"
 import { Printer, FileText, BarChart, Calendar } from "lucide-react"
 import { formatCurrency, formatDate } from "@/lib/utils"
 
-export function PrintReports({ data, currency }) {
+import { AppData, Debt, Achievement, Payment } from "@/types"
+
+interface PaymentWithDebt extends Payment {
+  debtName: string;
+  debtId: string;
+}
+
+export function PrintReports({ data, currency }: { data: AppData; currency?: string }) {
   const [reportType, setReportType] = useState("summary")
   const [includeOptions, setIncludeOptions] = useState({
     overview: true,
@@ -19,7 +26,7 @@ export function PrintReports({ data, currency }) {
     projections: true,
   })
 
-  const toggleOption = (option) => {
+  const toggleOption = (option: keyof typeof includeOptions) => {
     setIncludeOptions({
       ...includeOptions,
       [option]: !includeOptions[option],
@@ -29,26 +36,30 @@ export function PrintReports({ data, currency }) {
   const generateReport = () => {
     // Create a new window for the report
     const reportWindow = window.open("", "_blank")
+    if (!reportWindow) {
+      console.error("Failed to open report window");
+      return;
+    }
 
     // Calculate some summary data
-    const totalDebt = data.debts.reduce((sum, debt) => sum + debt.initialAmount, 0)
-    const paidOffAmount = data.debts.reduce((sum, debt) => sum + debt.paidAmount, 0)
+    const totalDebt = data.debts.reduce((sum: number, debt: Debt) => sum + debt.initialAmount, 0)
+    const paidOffAmount = data.debts.reduce((sum: number, debt: Debt) => sum + debt.paidAmount, 0)
     const remainingAmount = totalDebt - paidOffAmount
     const paidOffPercentage = totalDebt > 0 ? Math.round((paidOffAmount / totalDebt) * 100) : 0
 
     // Get all payments across all debts, sorted by date
     const allPayments = data.debts
-      .flatMap((debt) =>
-        debt.payments.map((payment) => ({
+      .flatMap((debt: Debt) =>
+        debt.payments.map((payment: Payment) => ({
           ...payment,
           debtName: debt.name,
           debtId: debt.id,
         })),
       )
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .sort((a: PaymentWithDebt, b: PaymentWithDebt) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
     // Count unlocked achievements
-    const unlockedAchievements = data.achievements.filter((a) => a.unlocked)
+    const unlockedAchievements = data.achievements.filter((a: Achievement) => a.unlocked)
 
     // Generate HTML content for the report
     let reportContent = `
@@ -183,7 +194,7 @@ export function PrintReports({ data, currency }) {
             <tbody>
       `
 
-      data.debts.forEach((debt) => {
+      data.debts.forEach((debt: Debt) => {
         const debtProgress = Math.round((debt.paidAmount / debt.initialAmount) * 100)
         reportContent += `
           <tr>
@@ -221,7 +232,7 @@ export function PrintReports({ data, currency }) {
             <tbody>
       `
 
-      allPayments.forEach((payment) => {
+      allPayments.forEach((payment: PaymentWithDebt) => {
         reportContent += `
           <tr>
             <td>${formatDate(payment.date)}</td>
@@ -257,13 +268,13 @@ export function PrintReports({ data, currency }) {
             <tbody>
       `
 
-      data.achievements.forEach((achievement) => {
+      data.achievements.forEach((achievement: Achievement) => {
         reportContent += `
           <tr>
             <td>${achievement.name}</td>
             <td>${achievement.description}</td>
             <td>${achievement.unlocked ? "Unlocked" : "Locked"}</td>
-            <td>${achievement.unlocked ? formatDate(achievement.unlockedAt) : "-"}</td>
+            <td>${achievement.unlocked && achievement.unlockedAt ? formatDate(achievement.unlockedAt) : "-"}</td>
           </tr>
         `
       })

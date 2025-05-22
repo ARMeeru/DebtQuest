@@ -29,14 +29,15 @@ export function DataManagement({ data, onDataImport }: DataManagementProps) {
     URL.revokeObjectURL(url)
   }
 
-  const handleImport = (event) => {
-    const file = event.target.files[0]
-    if (!file) return
+  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files || files.length === 0) return
 
+    const file = files[0]
     const reader = new FileReader()
-    reader.onload = (e) => {
+    reader.onload = (e: ProgressEvent<FileReader>) => {
       try {
-        const importedData = JSON.parse(e.target.result as string)
+        const importedData = JSON.parse((e.target?.result as string) || '{}')
         onDataImport(importedData)
       } catch (error) {
         alert("Error importing data. Please check the file format.")
@@ -46,7 +47,7 @@ export function DataManagement({ data, onDataImport }: DataManagementProps) {
     reader.readAsText(file)
 
     // Reset the input
-    event.target.value = null
+    event.target.value = ""
   }
 
   const handleReset = () => {
@@ -63,6 +64,9 @@ export function DataManagement({ data, onDataImport }: DataManagementProps) {
             points: 10,
             unlocked: false,
             unlockedAt: null,
+            progressBased: false,
+            currentProgress: 0,
+            targetProgress: 0,
           },
           {
             id: "2",
@@ -72,6 +76,9 @@ export function DataManagement({ data, onDataImport }: DataManagementProps) {
             points: 15,
             unlocked: false,
             unlockedAt: null,
+            progressBased: false,
+            currentProgress: 0,
+            targetProgress: 0,
           },
           {
             id: "3",
@@ -141,6 +148,9 @@ export function DataManagement({ data, onDataImport }: DataManagementProps) {
             points: 20,
             unlocked: false,
             unlockedAt: null,
+            progressBased: false,
+            currentProgress: 0,
+            targetProgress: 0,
           },
           {
             id: "9",
@@ -150,6 +160,9 @@ export function DataManagement({ data, onDataImport }: DataManagementProps) {
             points: 25,
             unlocked: false,
             unlockedAt: null,
+            progressBased: false,
+            currentProgress: 0,
+            targetProgress: 0,
           },
           {
             id: "10",
@@ -159,6 +172,9 @@ export function DataManagement({ data, onDataImport }: DataManagementProps) {
             points: 50,
             unlocked: false,
             unlockedAt: null,
+            progressBased: false,
+            currentProgress: 0,
+            targetProgress: 0,
           },
         ],
       })
@@ -195,7 +211,7 @@ export function DataManagement({ data, onDataImport }: DataManagementProps) {
               </h3>
               <p className="text-sm text-gray-600 mb-4">Restore from a previously exported backup file</p>
               <div className="flex items-center gap-2">
-                <Button variant="outline" onClick={() => document.getElementById("file-upload").click()}>
+                <Button variant="outline" onClick={() => document.getElementById("file-upload")?.click()}>
                   Select Backup File
                 </Button>
                 <input id="file-upload" type="file" accept=".json" onChange={handleImport} className="hidden" />

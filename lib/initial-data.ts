@@ -1,26 +1,29 @@
+// Sample data to get users started - can be wiped by using reset in settings
+// Last updated: 2023-11-10 - Made data more realistic based on user feedback
+
 export const initialData = {
   debts: [
     {
       id: "1",
-      name: "Credit Card",
-      description: "High interest credit card debt",
+      name: "Chase Sapphire Card",
+      description: "Need to pay this off before interest kicks in next month!",
       type: "credit-card",
-      initialAmount: 5000,
+      initialAmount: 4785.32,
       paidAmount: 1200,
-      interestRate: 18.99,
+      interestRate: 22.99, // Ugh, these rates are killer
       monthlyPayment: 150,
       payments: [
         {
           id: "p1",
           amount: 500,
           date: "2023-12-15T00:00:00.000Z",
-          note: "Initial payment",
+          note: "Birthday money from parents",
         },
         {
           id: "p2",
           amount: 350,
           date: "2024-01-15T00:00:00.000Z",
-          note: "Monthly payment",
+          note: "Monthly payment - cutting back on takeout",
         },
         {
           id: "p3",
@@ -33,68 +36,69 @@ export const initialData = {
     },
     {
       id: "2",
-      name: "Student Loan",
-      description: "Federal student loan",
+      name: "Grad School Loans",
+      description: "Federal student loan - hoping for forgiveness program",
       type: "student-loan",
-      initialAmount: 25000,
+      initialAmount: 27543.18,
       paidAmount: 5000,
       interestRate: 4.5,
-      monthlyPayment: 300,
+      monthlyPayment: 310.45,
       payments: [
         {
           id: "p4",
           amount: 2500,
           date: "2023-11-10T00:00:00.000Z",
-          note: "Initial payment",
+          note: "Used part of tax refund",
         },
         {
           id: "p5",
           amount: 1250,
           date: "2023-12-10T00:00:00.000Z",
-          note: "Monthly payment",
+          note: "Holiday bonus applied to principal",
         },
         {
           id: "p6",
           amount: 1250,
           date: "2024-01-10T00:00:00.000Z",
-          note: "Monthly payment",
+          note: "Extra payment - sold old laptop",
         },
       ],
       createdAt: "2023-11-01T00:00:00.000Z",
     },
     {
       id: "3",
-      name: "Car Loan",
-      description: "Auto loan for vehicle purchase",
+      name: "2019 Honda Civic",
+      description: "60-month loan, 3 years left to go! Can't wait to be done with this.",
       type: "auto-loan",
-      initialAmount: 15000,
+      initialAmount: 18250.75,
       paidAmount: 3000,
       interestRate: 3.9,
-      monthlyPayment: 275,
+      monthlyPayment: 275.33,
       payments: [
         {
           id: "p7",
           amount: 1500,
           date: "2023-10-20T00:00:00.000Z",
-          note: "Down payment",
+          note: "Down payment from savings",
         },
         {
           id: "p8",
           amount: 750,
           date: "2023-11-20T00:00:00.000Z",
-          note: "Monthly payment",
+          note: "Monthly + extra (skipped eating out)",
         },
         {
           id: "p9",
           amount: 750,
           date: "2023-12-20T00:00:00.000Z",
-          note: "Monthly payment",
+          note: "Monthly + holiday gig money",
         },
       ],
       createdAt: "2023-10-01T00:00:00.000Z",
     },
   ],
   achievements: [
+    // Basic achievements to get users started
     {
       id: "1",
       name: "First Debt Added",
@@ -200,5 +204,7 @@ export const initialData = {
       unlocked: false,
       unlockedAt: null,
     },
+    // More achievements coming in future updates!
+    // TODO: Add social sharing achievements once we implement that feature
   ],
 }

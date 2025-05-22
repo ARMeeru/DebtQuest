@@ -8,14 +8,23 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Trophy, Lock } from "lucide-react"
 import { formatDate } from "@/lib/utils"
+import { Achievement, Debt } from "@/types"
 
-export function EnhancedAchievements({ achievements, paidOffPercentage, debts, onUpdateAchievements }) {
+export function EnhancedAchievements({ achievements, paidOffPercentage, debts, onUpdateAchievements }: {
+  achievements: Achievement[];
+  paidOffPercentage: number;
+  debts: Debt[];
+  onUpdateAchievements: (updatedAchievements: Achievement[]) => void;
+}) {
+  // We'll use achievements directly since all required properties are handled through type definitions
   const [activeTab, setActiveTab] = useState("all")
   const [showUnlocked, setShowUnlocked] = useState(true)
   const [showLocked, setShowLocked] = useState(true)
-  const prevAchievementsRef = useRef(null)
-  const prevPaidOffPercentageRef = useRef(null)
-  const prevDebtsRef = useRef(null)
+  const prevAchievementsRef = useRef<string | null>(null)
+  const prevPaidOffPercentageRef = useRef<number | null>(null)
+  const prevDebtsRef = useRef<string | null>(null)
+  
+  // No helper needed - we'll handle null checks inline
 
   // Check for newly unlocked achievements
   useEffect(() => {
@@ -161,7 +170,7 @@ export function EnhancedAchievements({ achievements, paidOffPercentage, debts, o
   }, [achievements, paidOffPercentage, debts, onUpdateAchievements])
 
   // Group achievements by category
-  const achievementsByCategory = achievements.reduce((acc, achievement) => {
+  const achievementsByCategory = achievements.reduce<Record<string, Achievement[]>>((acc, achievement) => {
     if (!acc[achievement.category]) {
       acc[achievement.category] = []
     }
@@ -186,8 +195,12 @@ export function EnhancedAchievements({ achievements, paidOffPercentage, debts, o
 
   // Get recently unlocked achievements
   const recentAchievements = achievements
-    .filter((a) => a.unlocked)
-    .sort((a, b) => new Date(b.unlockedAt).getTime() - new Date(a.unlockedAt).getTime())
+    .filter((a) => a.unlocked && a.unlockedAt)
+    .sort((a, b) => {
+      const dateA = a.unlockedAt ? new Date(a.unlockedAt).getTime() : 0;
+      const dateB = b.unlockedAt ? new Date(b.unlockedAt).getTime() : 0;
+      return dateB - dateA;
+    })
     .slice(0, 3)
 
   return (
@@ -244,7 +257,7 @@ export function EnhancedAchievements({ achievements, paidOffPercentage, debts, o
                           </Badge>
                         </div>
                         <p className="text-xs text-gray-600">{achievement.description}</p>
-                        <p className="text-xs text-gray-500 mt-1">Unlocked {formatDate(achievement.unlockedAt)}</p>
+                        <p className="text-xs text-gray-500 mt-1">Unlocked {achievement.unlockedAt ? formatDate(achievement.unlockedAt) : 'recently'}</p>
                       </div>
                     </div>
                   ))}
@@ -402,7 +415,7 @@ export function EnhancedAchievements({ achievements, paidOffPercentage, debts, o
                       )}
 
                       {achievement.unlocked && (
-                        <p className="text-xs text-gray-500 mt-2">Unlocked {formatDate(achievement.unlockedAt)}</p>
+                        <p className="text-xs text-gray-500 mt-2">Unlocked {achievement.unlockedAt ? formatDate(achievement.unlockedAt) : 'recently'}</p>
                       )}
                     </div>
                   </div>

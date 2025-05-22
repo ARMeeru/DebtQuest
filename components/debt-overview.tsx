@@ -40,8 +40,12 @@ export function DebtOverview({
 
   // Get recent achievements
   const recentAchievements = data.achievements
-    .filter((a) => a.unlocked)
-    .sort((a, b) => new Date(b.unlockedAt).getTime() - new Date(a.unlockedAt).getTime())
+    .filter((a) => a.unlocked && a.unlockedAt)
+    .sort((a, b) => {
+      const dateA = a.unlockedAt ? new Date(a.unlockedAt).getTime() : 0;
+      const dateB = b.unlockedAt ? new Date(b.unlockedAt).getTime() : 0;
+      return dateB - dateA;
+    })
     .slice(0, 3)
 
   return (
